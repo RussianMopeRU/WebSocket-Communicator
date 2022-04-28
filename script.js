@@ -29,16 +29,19 @@ requestAnimationFrame(updSockets)
 }
 
 function handleWsMsg(message){
-    console.debug(message.data) // what client gets
+    // console.debug(message.data) // what client gets
 }
 
 function getValidSocket(){
     sockets.forEach(socket => {
         if(socket.readyState == 1)  {
             window.validSocket = socket; // USAGE ---> window.validSocket.send('hello')
-         socket.onmessage = (mes) => {
+        if(!socket.listened || socket.listened == false){
+         socket.addEventListener("message", (mes) => {
              handleWsMsg(mes)
-         };
+             socket.listened = true;
+         });
+        }
         }
     })
 }
